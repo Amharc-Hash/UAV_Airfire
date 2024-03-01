@@ -101,7 +101,7 @@ def filter_inside_boxes(boxes):
     return filtered_boxes
 
 def generate_frames():
-    camera_rtsp = cv2.VideoCapture(0)
+    camera_rtsp = cv2.VideoCapture('rtsp://192.168.144.10:8554/H264Video')
     while True:
         start_time = time.time()
         success_rtsp, frame_rtsp = camera_rtsp.read()
@@ -117,7 +117,7 @@ def generate_frames():
             logging.debug(f"Frame generation time: {elapsed_time} seconds")
 
 def generate_rgb_frames():
-    camera_rgb = cv2.VideoCapture(0)  
+    camera_rgb = cv2.VideoCapture('rtsp://192.168.144.10:8554/H264Video')  
     while True:
         start_time = time.time()
         success_rgb, frame_rgb = camera_rgb.read()
