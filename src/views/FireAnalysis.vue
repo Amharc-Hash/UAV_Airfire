@@ -74,19 +74,20 @@
                             </option>
                         </select>
                     </div>
-                </div> -->
+                </div>
                 
                 <div class="predicFire">
 			        <div class="title">
-				        <h2>Fire Prediction</h2>
+				        <h5>Fire Prediction</h5>
 			        </div>
 			        <div class="showResult">
 				        <div class="compass">
-				            <img src="../assets/Vector.png" style="width: 40px; height: 40px;">
-				            <img src="../assets/compass.png" style="width: 150px; height: 150px;">
+				            <img src="../assets/Vector.png" style="width: 20px; height: 20px;">
+				            <img src="../assets/compass.png" style="width: 80px; height: 80px;">
 			            </div>
 			            <div class="predicResult">
-                            <img src="../assets/result/Figure_1.png" style="width: 520px; height: 380px;">
+                            <img src="http://localhost:5000/fire_analysis_feed" style="width: 350px; height: 240px;">
+                            <meta http-equiv="refresh" content="30">
 			            </div>
 			            <div class="fireDenger">
                             <div class="title">
@@ -248,7 +249,6 @@
 			    border-radius: 12px;
 			    padding: 20px;
 
-
                 .showResult {
 				    display: flex;
 				    margin-top: 5px;
@@ -264,6 +264,7 @@
 
 
                     .fireDenger{
+
                         margin-left: 100px;
 					    font-size: 24px;
                         .title{
