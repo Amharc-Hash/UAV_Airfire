@@ -18,7 +18,7 @@
         <div class="main_content">
              <!-- real-time -->
             <div class="vidoStream">
-                <img style="-webkit-user-select: none;" src="http://localhost:5000/video_feed" width="840" height="560">
+                <img style="-webkit-user-select: none;" src="http://localhost:5000/video_feed" width="1240" height="780">
                 <!-- <video src="../assets/Videostream/HorrusStream.mp4" style="width: 840px; height: 560px;" controls autoplay></video> -->
             </div>
              <!-- Weather-->
@@ -69,10 +69,10 @@
       return {
         currentDate: '',
         currentTime: '',
-        valueTemp:'32',
-        windSpeed:'11',
-        windDirec: 'nw',
-        humidity:'33',
+        valueTemp:'31',
+        windSpeed:'2',
+        windDirec: 'n',
+        humidity:'23',
 
       }
     },
@@ -138,8 +138,8 @@
         margin: 20px;
 
 		.vidoStream {
-			width: 840px;
-			height: 560px;
+			width: 1240px;
+			height: 780px;
 			background-color: var(--light);
 		}
 
@@ -150,7 +150,7 @@
             .card {
                 display: flex;
                 background-color: var(--light);
-                width: 316px;
+                width: 340px;
                 height: 100px;
                 border-radius: 12px;
                 padding: 20px;

@@ -4,7 +4,6 @@ import cv2
 import logging
 import time
 import numpy as np
-import cv2 as cv
 import torch
 import torchvision
 from torchvision import transforms
@@ -330,7 +329,6 @@ def thermal_feed():
 @app.route('/fire_analysis_feed')
 def fire_analysis_feed():
     return Response(prediction_show(), mimetype='multipart/x-mixed-replace; boundary=frame')
-
 
 # Run the Flask app+
 if __name__ == "__main__":

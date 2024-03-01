@@ -22,10 +22,10 @@
 	        <div class="detection">
                 <!--RGB detectiont -->
 		        <div class="detecCard">
-                    <h5>RGB Detection</h5>
+                    <h2>RGB Detection</h2>
 				    <div class="result">
 					    <!-- <img src="../assets/result/rgb_Detection.jpg" style="width: 340px; height: 220px;"> -->
-					    <img style="-webkit-user-select: none;" src="http://localhost:5000/rgb_feed" width="340" height="220">
+					    <img style="-webkit-user-select: none;" src="http://localhost:5000/rgb_feed" width="420" height="260">
                         <div calss="paraDetec">
 						    <div class="box-container">
               			        <div class="box" style="border: 2px solid red;"></div>
@@ -37,10 +37,10 @@
 
                 <!--Thermal detectiont -->
 		        <div class="detecCard">
-                    <h5>RGB Detection</h5>
+                    <h2>Thermal Detection</h2>
 				    <div class="result">
 					    <!-- <img src="../assets/result/thermal_Detection.jpg" style="width: 340px; height: 220px;"> -->
-                        <img style="-webkit-user-select: none;" src="http://localhost:5000/thermal_feed" width="340" height="220">
+                        <img style="-webkit-user-select: none;" src="http://localhost:5000/thermal_feed" width="420" height="260">
 					    <div calss="paraDetec">
 						    <div class="box-container">
               			        <div class="box" style="border: 2px solid red;"></div>
@@ -57,7 +57,7 @@
 
             <!--prediction -->
 	        <div class="prediction">
-                <div class="inputWildTime">
+                <!-- <div class="inputWildTime">
                     <div class="wildbutton">
                         <p>Type of Wild</p>
                         <select v-model="selectedWildOption" @change="handleChangeWild">
@@ -195,13 +195,15 @@
 		display: flex;
 		gap: 20px;
 
+
 		    .detecCard{
 			    background-color: var(--light);
-			    width: 578px;
-			    height: 280px;
+			    width: 790px;
+			    height: 340px;
 			    padding: 20px;
 			    border-radius: 12px;
-                
+
+    
 
                 .result{
                     display: flex;
@@ -241,8 +243,8 @@
             }
 
             .predicFire {
-			    width: 820px;
-			    height: 300px;
+			    width: 1600px;
+			    height: 450px;
 			    background-color: var(--light);
 			    border-radius: 12px;
 			    padding: 20px;
@@ -254,7 +256,7 @@
                     .compass{
 					    display: flex;
 					    flex-direction: column;
-					    margin: 50px;
+					    margin: 10px 150px 0px 150px;
 					    gap:5px;
 					    align-items: center;
 					    justify-content: center;
@@ -262,11 +264,13 @@
 
 
                     .fireDenger{
+
+                        margin-left: 100px;
+					    font-size: 24px;
                         .title{
-                            margin-bottom: 10px;
+                            margin-bottom: 20px;
                         }
-					    font-size: 14px;
-                        margin-left: 50px;
+                       
                         
                     }
                 }
@@ -276,8 +280,9 @@
 
 	}
 
+
     .box-container {
-        margin-bottom: 10px;
+        margin-bottom: 18px;
       	display: flex;
       	align-items: center;
     }
@@ -289,7 +294,7 @@
   
     .text {
         color: var(--dark);
-      	font-size: 12px; 
+      	font-size: 18px; 
       	margin-left: 4px; 
     }
 		
