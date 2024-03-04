@@ -33,10 +33,10 @@ for register_address in register_address_list:
 		print(f'Error reading registers : {register_address}: {result}')
 
 # Process the result
-print(f'Wind Speed: {str(data_list[0]).format("0.2f")} m/s')
+print(f'Wind Speed: {data_list[0]/100} m/s')
 print(f'Wind Direction: {data_list[1]}')
-print(f'Humidity: {str(data_list[2]).format("0.1f")} %')
-print(f'Temperature: {str(data_list[3]).format("0.1f")} C')
+print(f'Humidity: {data_list[2]/10} %')
+print(f'Temperature: {data_list[3]/10} C')
 # Close the connection
 client.close()
 
