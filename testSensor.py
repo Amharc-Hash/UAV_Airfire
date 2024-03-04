@@ -1,47 +1,40 @@
-import pymodbus
+import serial
 from pymodbus.client.sync import ModbusSerialClient
 
-# **Important:** Replace these placeholders with your specific values
-# - Replace 'your_device_id' with the actual ID of your Modbus device
-# - Replace '/dev/ttyUSB*' with the correct serial port for your USB-RS485 adapter
-# - Adjust 'baudrate', 'parity', 'stopbits', and 'timeout' as needed based on your device's settings
-device_id = 0x2
-port = '/dev/ttyUSB0'  # Check with `ls /dev/ttyUSB*` to identify the correct port
-baudrate = 9600
-parity = 'O'
+# RS485 USB Configuration
+port = '/dev/ttyUSB0'  # Replace if your USB adapter uses a different port
+baudrate = 9600        # Adjust if your device uses a different baud rate
+parity = 'N'
 stopbits = 1
-timeout = 1  # Adjust as needed
+bytesize = 8
 
-# Create a Modbus serial client, handling potential errors gracefully
-try:
-    client = ModbusSerialClient(method='rtu', port=port, baudrate=baudrate, parity=parity, stopbits=stopbits, timeout=timeout)
-    client.connect()
-except Exception as e:
-    print(f"Error connecting to Modbus device: {e}")
-    exit()
+# Modbus Slave Configuration
+client = ModbusSerialClient(method='rtu', port=port, baudrate=baudrate,
+                            parity=parity, stopbits=stopbits, bytesize=bytesize,
+                            timeout=2000)   # Adjust timeout if needed
 
-# Read specific Modbus register(s)
-try:
-    # Replace these placeholders with the function code and register addresses you need to read
-    function_code = pymodbus.constants.READ_HOLDING_REGISTERS
-    register_address = 0x1F4  # Replace with the starting register address
-    register_count = 1  # Replace with the number of registers to read
+slave_id = 0x02           # ID of your Modbus slave device
+register_address_list = [0x1F4, 0x1F6, 0x1F8, 0x1F9]    # [WindSpeed, WindDir, Hum, Temp]
+count = 1               # Number of registers to read
 
-    # Execute the Modbus read request
-    read_result = client.read_holding_registers(register_address, register_count)
+data_list = []
 
-    # Check for successful read operation
-    if read_result.is_exception():
-        print(f"Error reading Modbus registers: {read_result}")
-    else:
-        # Process the read register values (e.g., print, store in variables)
-        print(f"Read values: {read_result.registers}")
+# Connect to the device
+client.connect()
 
-except Exception as e:
-    print(f"Error during Modbus read operation: {e}")
+# Read data
+for register_address in register_address_list:
+	result = client.read_holding_registers(register_address, count, unit=slave_id)
+	if not result.isError():
+		data_list.append(result.registers[0])
+		#print(len(result.registers))
+	else:
+		data_list.append('error')
+		print(f'Error reading registers : {register_address}: {result}')
 
-finally:
-    # Always close the Modbus connection
-    client.close()
-    print("Modbus connection closed.")
+# Process the result
+print('Data:', data_list)
+
+# Close the connection
+client.close()
 
