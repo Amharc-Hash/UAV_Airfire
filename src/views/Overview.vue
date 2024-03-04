@@ -21,7 +21,7 @@
                 <!-- <img style="-webkit-user-select: none;" src="http://localhost:5000/video_feed" width="1240"
                     height="780"> -->
                 <!-- <video src="../assets/Videostream/HorrusStream.mp4" style="width: 840px; height: 560px;" controls autoplay></video> -->
-                <video id="rtsp-player" class="video-js" width="1240" height="780" controls></video>
+                <!-- <video id="rtsp-player" class="video-js" width="1240" height="780" controls></video> -->
             </div>
             <!-- Weather-->
             <div class="weatherBar">
@@ -67,8 +67,6 @@
 
 <script>
     import axios from 'axios';
-    import 'video.js/dist/video-js.css'; // Import Video.js styles
-    import videojs from 'video.js';
     export default {
         data() {
             return {
@@ -111,15 +109,6 @@
                 } catch (error) {
                     console.error('Error fetching data', error);
                 }
-            },
-            initializeVideoPlayer() {
-            const player = videojs('rtsp-player', {
-                autoplay: true, 
-                sources: [{
-                    src: 'rtsp://192.168.144.10:8554',
-                    type: 'application/x-mpegURL' // Or the appropriate MIME type for your stream
-                    }]
-                });
             }
         }
 };
