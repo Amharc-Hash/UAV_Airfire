@@ -65,44 +65,49 @@
 </template>
 
 <script>
-export default {
-    data() {
-        return {
-            currentDate: '',
-            currentTime: '',
-            valueTemp: '31',
-            windSpeed: '2',
-            windDirec: 'n',
-            humidity: '23',
+    import axios from 'axios';
+    export default {
+        data() {
+            return {
+                currentDate: '',
+                currentTime: '',
+                valueTemp: '31',
+                windSpeed: '2',
+                windDirec: 'n',
+                humidity: '23',
 
-        }
-    },
+            }
+        },
 
-    async mounted() {
-        this.updateDateTime();
-        setInterval(this.updateDateTime, 1000);
-        this.startVideo();
+        mounted() {
+            this.updateDateTime();
+            setInterval(this.updateDateTime, 1000);
+            // this.startVideo();
+            this.fetchData(); // Fetch initial data
+            setInterval(this.fetchData, 5000); // Fetch periodically
+        },
 
-        // Make a GET request to your server's endpoint
-        try {
-            const response = await axios.get('http://localhost:5000/portable_weather_station_read');
-            this.weatherData = response.data; // Ensure this is correct
-            console.log('Weather data:', this.weatherData);
-        } catch (error) {
-            console.error(error);
-        }
-    },
-
-    methods: {
-        //time
-        updateDateTime() {
-            const now = new Date();
-            this.currentDate = now.toLocaleDateString();
-            this.currentTime = now.toLocaleTimeString();
-            console.log('Updated date and time:', this.currentDate, this.currentTime);
+        methods: {
+            //time
+            updateDateTime() {
+                const now = new Date();
+                this.currentDate = now.toLocaleDateString();
+                this.currentTime = now.toLocaleTimeString();
+                console.log('Updated date and time:', this.currentDate, this.currentTime);
+            },
+            async fetchData() {
+                try {
+                    const response = await axios.get('http://localhost:5000/weather_data');
+                    this.valueTemp = response.data.valueTemp;
+                    this.windSpeed = response.data.windSpeed;
+                    this.windDirec = response.data.windDirec;
+                    this.humidity = response.data.humidity;
+                } catch (error) {
+                    console.error('Error fetching data', error);
+                }
+            }
         }
     }
-}
 
 </script>
 
