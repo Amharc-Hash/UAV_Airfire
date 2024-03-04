@@ -87,6 +87,7 @@ export default {
         try {
             const response = await axios.get('http://localhost:5000/portable_weather_station_read');
             this.weatherData = response.data; // Ensure this is correct
+            console.log('Weather data:', this.weatherData);
         } catch (error) {
             console.error(error);
         }
