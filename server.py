@@ -1,17 +1,35 @@
-from flask import Flask, jsonify
-import random  # For simulating real-time data updates
-import time
+from flask import Flask, jsonify, Response
 from flask_cors import CORS  # Import CORS
-import json
-import serial
 from pymodbus.client.sync import ModbusSerialClient
 import cv2
-import base64
-import asyncio
-import websockets
+import logging
+import time
 
 app = Flask(__name__)
 CORS(app)
+
+
+# Video Streaming route
+@app.route('/video_feed')
+def video_feed():
+    # Replace with the actual RTSP address
+    camera_rtsp = cv2.VideoCapture('rtsp://192.168.144.10:8554/H264Video')
+    def generate_frames():
+        while True:
+            start_time = time.time()
+            success_rtsp, frame_rtsp = camera_rtsp.read()
+            if not success_rtsp:
+                break
+            else:
+                ret_rtsp, buffer_rtsp = cv2.imencode('.jpg', frame_rtsp)
+                frame_rtsp = buffer_rtsp.tobytes()
+                # Concatenate frame and yield for streaming
+                yield (b'--frame\r\n'
+                    b'Content-Type: image/jpeg\r\n\r\n' + frame_rtsp + b'\r\n') 
+                elapsed_time = time.time() - start_time
+                logging.debug(f"Frame generation time: {elapsed_time} seconds")
+
+    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # Replace this with your actual data fetching/generation logic
 def get_sensor_data():

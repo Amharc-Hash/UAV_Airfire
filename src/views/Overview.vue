@@ -18,6 +18,7 @@
         <div class="main_content">
             <!-- real-time -->
             <div class="vidoStream">
+                <img style="-webkit-user-select: none;" src="http://localhost:5000/video_feed" width="1240" height="780">
                 <!-- <img style="-webkit-user-select: none;" src="http://localhost:5000/video_feed" width="1240"
                     height="780"> -->
                 <!-- <video src="../assets/Videostream/HorrusStream.mp4" style="width: 840px; height: 560px;" controls autoplay></video> -->
@@ -86,8 +87,6 @@
             // this.startVideo();
             this.fetchData(); // Fetch initial data
             setInterval(this.fetchData, 1000); // Fetch periodically
-
-            this.initializeVideoPlayer();
 
         },
 
