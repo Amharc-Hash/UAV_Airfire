@@ -18,7 +18,8 @@
         <div class="main_content">
             <!-- real-time -->
             <div class="vidoStream">
-                <img style="-webkit-user-select: none;" src="http://localhost:5000/video_feed" width="1240" height="780">
+                <img style="-webkit-user-select: none;" src="http://localhost:5000/video_feed" width="1240"
+                    height="780">
                 <!-- <video src="../assets/Videostream/HorrusStream.mp4" style="width: 840px; height: 560px;" controls autoplay></video> -->
             </div>
             <!-- Weather-->
@@ -77,14 +78,18 @@ export default {
         }
     },
 
-    mounted() {
-        //--time---//
+    async mounted() {
         this.updateDateTime();
         setInterval(this.updateDateTime, 1000);
-
-        //--video---//
         this.startVideo();
 
+        // Make a GET request to your server's endpoint
+        try {
+            const response = await axios.get('http://localhost:5000/portable_weather_station_read');
+            this.weatherData = response.data; // Ensure this is correct
+        } catch (error) {
+            console.error(error);
+        }
     },
 
     methods: {

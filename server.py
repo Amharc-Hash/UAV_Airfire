@@ -14,6 +14,11 @@ import matplotlib.animation as animation
 from matplotlib.colors import ListedColormap
 import copy
 
+# Import necessary modules for Portable Weather Station
+import serial
+from pymodbus.client.sync import ModbusSerialClient
+
+
 #model setup
 model = torch.hub.load('yolov3', 'custom', path='src/components/best.pt', source='local') 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -312,6 +317,51 @@ def prediction_show() :
     frame_rgb = buffer_rgb.tobytes()
     yield (b'--frame\r\n'
         b'Content-Type: image/jpeg\r\n\r\n' + frame_rgb + b'\r\n')
+    
+
+
+# Protable Weather Station Readings
+def portable_weather_station_read():
+    # RS485 USB Configuration
+    port = '/dev/ttyUSB0'  # Replace if your USB adapter uses a different port
+    baudrate = 9600        # Adjust if your device uses a different baud rate
+    parity = 'N'
+    stopbits = 1
+    bytesize = 8
+
+    # Modbus Slave Configuration
+    client = ModbusSerialClient(method='rtu', port=port, baudrate=baudrate,
+                                parity=parity, stopbits=stopbits, bytesize=bytesize,
+                                timeout=2000)   # Adjust timeout if needed
+
+    slave_id = 0x02           # ID of your Modbus slave device
+    register_address_list = [0x1F4, 0x1F6, 0x1F8, 0x1F9]    # [WindSpeed, WindDir, Hum, Temp]
+    count = 1               # Number of registers to read
+
+    data_list = []
+
+    # Connect to the device
+    client.connect()
+
+    # Read data
+    for register_address in register_address_list:
+        result = client.read_holding_registers(register_address, count, unit=slave_id)
+        if not result.isError():
+            data_list.append(result.registers[0])
+            #print(len(result.registers))
+        else:
+            data_list.append('error')
+            print(f'Error reading registers : {register_address}: {result}')
+
+    # Process the result
+    print(f'Wind Speed: {data_list[0]/100} m/s')
+    print(f'Wind Direction: {data_list[1]}')
+    print(f'Humidity: {data_list[2]/10} %')
+    print(f'Temperature: {data_list[3]/10} C')
+    # Close the connection
+    client.close()
+
+    return data_list
 
 # Route to stream video frames
 @app.route('/video_feed')
@@ -329,6 +379,10 @@ def thermal_feed():
 @app.route('/fire_analysis_feed')
 def fire_analysis_feed():
     return Response(prediction_show(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/portable_weather_station_read')
+def portable_weather_station_read():
+    return Response(portable_weather_station_read(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # Run the Flask app+
 if __name__ == "__main__":
