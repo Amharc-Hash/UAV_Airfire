@@ -40,3 +40,5 @@ print(f'Temperature: {data_list[3]/10} C')
 # Close the connection
 client.close()
 
+
+

@@ -18,9 +18,10 @@
         <div class="main_content">
             <!-- real-time -->
             <div class="vidoStream">
-                <img style="-webkit-user-select: none;" src="http://localhost:5000/video_feed" width="1240"
-                    height="780">
+                <!-- <img style="-webkit-user-select: none;" src="http://localhost:5000/video_feed" width="1240"
+                    height="780"> -->
                 <!-- <video src="../assets/Videostream/HorrusStream.mp4" style="width: 840px; height: 560px;" controls autoplay></video> -->
+                <video id="rtsp-player" class="video-js" width="1240" height="780" controls></video>
             </div>
             <!-- Weather-->
             <div class="weatherBar">
@@ -47,7 +48,7 @@
                     <img src="../assets/windSpeed.png" alt="Card Image" class="card-image">
                     <div class="card-content">
                         <p class="card-title">Wind Speed</p>
-                        <p class="card-value">{{ windSpeed }} k/hr</p>
+                        <p class="card-value">{{ windSpeed }} m/s</p>
                     </div>
                 </div>
 
@@ -66,6 +67,8 @@
 
 <script>
     import axios from 'axios';
+    import 'video.js/dist/video-js.css'; // Import Video.js styles
+    import videojs from 'video.js';
     export default {
         data() {
             return {
@@ -84,7 +87,10 @@
             setInterval(this.updateDateTime, 1000);
             // this.startVideo();
             this.fetchData(); // Fetch initial data
-            setInterval(this.fetchData, 5000); // Fetch periodically
+            setInterval(this.fetchData, 1000); // Fetch periodically
+
+            this.initializeVideoPlayer();
+
         },
 
         methods: {
@@ -105,9 +111,18 @@
                 } catch (error) {
                     console.error('Error fetching data', error);
                 }
+            },
+            initializeVideoPlayer() {
+            const player = videojs('rtsp-player', {
+                autoplay: true, 
+                sources: [{
+                    src: 'rtsp://192.168.144.10:8554',
+                    type: 'application/x-mpegURL' // Or the appropriate MIME type for your stream
+                    }]
+                });
             }
         }
-    }
+};
 
 </script>
 
