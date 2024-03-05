@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import SideBar from './components/SideBar.vue';
+import SideBar from './components/sidebar.vue';
 </script>
 <style>
 :root {
@@ -16,7 +16,6 @@ import SideBar from './components/SideBar.vue';
 	--dark: #1E1E1E;
 	--dark-alt: #0E0E0E;
 	--light: #f1f5f9;
-	--sidebar-width: 260px;
 }
 
 * {

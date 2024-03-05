@@ -3,23 +3,23 @@
 		<!-- Top content -->
 		<div class="top_content">
         <h2>Overview</h2>
-        <div class="date_time">
-            <div class="date">
-                <img src="../assets/Icon/Date.svg" class="icons" />
-                <p>{{ currentDate }}</p>
-          </div>
-          <div class="time">
-                <img src="../assets/Icon/time.svg" class="icons" />
-                <p>{{ currentTime }}</p>
-          </div>
-        </div>
+            <div class="date_time">
+                <div class="date">
+                    <img src="../assets/Icon/Date.svg" class="icons" />
+                    <p>{{ currentDate }}</p>
+                </div>
+                <div class="time">
+                    <img src="../assets/Icon/time.svg" class="icons" />
+                    <p>{{ currentTime }}</p>
+                </div>
+            </div>
 		</div>
         <!-- Main content -->
         <div class="main_content">
              <!-- real-time -->
             <div class="vidoStream">
-                <img style="-webkit-user-select: none;" src="http://localhost:5000/video_feed" width="1240" height="780">
-                <!-- <video src="../assets/Videostream/HorrusStream.mp4" style="width: 840px; height: 560px;" controls autoplay></video> -->
+                <!-- <img style="-webkit-user-select: none;" src="http://localhost:5000/video_feed" width="1240" height="780"> -->
+                <video src="../assets/Videostream/HorrusStream.mp4" style="width: 1120px; height: 800px;" controls autoplay></video>
             </div>
              <!-- Weather-->
             <div class="weatherBar">
@@ -60,9 +60,9 @@
       			</div>
             </div>
         </div>
+
     </div>
 </template>
-
 <script>
     export default {
     data() {
@@ -73,44 +73,38 @@
         windSpeed:'2',
         windDirec: 'n',
         humidity:'23',
-
       }
     },
 
-    mounted() {
-       //--time---//
-      this.updateDateTime();
-      setInterval(this.updateDateTime, 1000);
-
-      //--video---//
-      this.startVideo();
-
+    created() {
+        setInterval(this.getNow, 1000);
     },
+    
+    methods: {
+        getNow: function() {
+            const today = new Date();
+            const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+            const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+            const currentDate = date;
+            const currentTime = time;
+            this.currentDate = currentDate;
+            this.currentTime = currentTime;
+            }
+        }
+}
 
-     methods: {
-      //time
-      updateDateTime() {
-        const now = new Date();
-        this.currentDate = now.toLocaleDateString();
-        this.currentTime = now.toLocaleTimeString();
-        console.log('Updated date and time:', this.currentDate, this.currentTime);
-      }
-    }
-    }
 
 </script>
-
 <style>
 .overview {
   
     display: flex;
     flex-direction: column;
-    margin-left: 64px;
-    /* width: 1257px;
-    height: 720px; */
+    margin-left: 220px;
 
     .top_content {
         height: 80px;
+        width: 1486px;
         padding: 20px 30px 20px 20px;
         display: flex;
         flex-direction: row;
@@ -125,7 +119,7 @@
             .date , .time{
               font-size: 20px;
               display: flex;
-              gap: 5px;
+              gap: 8px;
               align-items: center;
             }
 
@@ -138,7 +132,7 @@
         margin: 20px;
 
 		.vidoStream {
-			width: 1240px;
+			width: 1120px;
 			height: 780px;
 			background-color: var(--light);
 		}
@@ -150,7 +144,7 @@
             .card {
                 display: flex;
                 background-color: var(--light);
-                width: 340px;
+                width: 300px;
                 height: 100px;
                 border-radius: 12px;
                 padding: 20px;
