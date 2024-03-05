@@ -27,7 +27,7 @@ def video_feed():
                 yield (b'--frame\r\n'
                     b'Content-Type: image/jpeg\r\n\r\n' + frame_rtsp + b'\r\n') 
                 elapsed_time = time.time() - start_time
-                logging.debug(f"Frame generation time: {elapsed_time} seconds")
+                # logging.debug(f"Frame generation time: {elapsed_time} seconds")
 
     return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
