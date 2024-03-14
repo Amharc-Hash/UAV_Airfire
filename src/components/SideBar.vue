@@ -2,8 +2,8 @@
 	<aside :class="`${is_expanded ? 'is-expanded' : ''}`">
 		<div class="logo">
 			<img :src="logo" />
-			<h2>AIRFIRE</h2>
-
+            <h2>AIRFIRE</h2>
+            
 		</div>
 
 		<div class="menu-toggle-wrap">
@@ -13,17 +13,17 @@
 		</div>
 		<div class="menu">
 			<router-link to="/" class="button">
-				<img :src="droneIcon" class="icons" />
+                <img :src="droneIcon" class="icons" />
 				<span class="text">Overview</span>
 			</router-link>
 			<router-link to="/fire-Analysis" class="button">
-				<img :src="fireIcon" class="icons" />
+				<img :src="fireIcon" class="icons"/>
 				<span class="text">Fire Ananlysis</span>
 			</router-link>
 		</div>
 
 		<div class="flex"></div>
-
+		
 	</aside>
 </template>
 
@@ -50,7 +50,7 @@ aside {
 	display: flex;
 	flex-direction: column;
 
-	background-image: url("../assets/bg_nav.png");
+    background-image: url("../assets/bg_nav.png");
 
 	color: var(--light);
 
@@ -66,9 +66,9 @@ aside {
 	}
 
 	.logo {
-		display: flex;
-		align-items: center;
-		gap: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
 		margin-top: 0.15rem;
 
 		img {
@@ -79,7 +79,7 @@ aside {
 	.menu-toggle-wrap {
 		display: flex;
 		justify-content: flex-end;
-		margin-top: 0.5rem;
+        margin-top: 0.5rem;
 
 		position: relative;
 		top: 0;
@@ -87,13 +87,12 @@ aside {
 
 		.menu-toggle {
 			transition: 0.2s ease-in-out;
-
 			.icons {
 				font-size: 2rem;
 				fill: var(--light);
 				transition: 0.2s ease-out;
 			}
-
+			
 			&:hover {
 				.icons {
 					transform: translateX(0.5rem);
@@ -102,8 +101,7 @@ aside {
 		}
 	}
 
-	h3,
-	.button .text {
+	h3, .button .text {
 		opacity: 0;
 		transition: opacity 0.3s ease-in-out;
 	}
@@ -122,7 +120,7 @@ aside {
 			display: flex;
 			align-items: center;
 			text-decoration: none;
-			margin: 8px;
+            margin: 8px;
 			transition: 0.2s ease-in-out;
 			padding: 0.5rem 1rem 0.5rem 0.5rem;
 
@@ -130,7 +128,6 @@ aside {
 				font-size: 1rem;
 				transition: 0.2s ease-in-out;
 			}
-
 			.text {
 				color: var(--light);
 				transition: 0.2s ease-in-out;
@@ -138,15 +135,15 @@ aside {
 
 			&:hover {
 				background-color: var(--dark-alt);
-				border-radius: 10px;
-
+                border-radius: 10px;
+                
 
 			}
 
 			&.router-link-exact-active {
 				background-color: var(--dark-alt);
 				border-radius: 10px;
-
+                
 
 			}
 		}
@@ -158,14 +155,13 @@ aside {
 
 		.menu-toggle-wrap {
 			top: -3rem;
-
+			
 			.menu-toggle {
 				transform: rotate(-180deg);
 			}
 		}
 
-		h3,
-		.button .text {
+		h3, .button .text {
 			opacity: 1;
 		}
 
@@ -180,4 +176,5 @@ aside {
 	@media (max-width: 1024px) {
 		z-index: 99;
 	}
-}</style>
+}
+</style>

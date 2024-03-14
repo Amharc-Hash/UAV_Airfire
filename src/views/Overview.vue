@@ -18,8 +18,9 @@
         <div class="main_content">
             <!-- real-time -->
             <div class="vidoStream">
-                <img style="-webkit-user-select: none;" src="http://localhost:5000/video_feed" width="1240" height="780">
-                <!-- <video src="../assets/Videostream/HorrusStream.mp4" style="width: 840px; height: 560px;" controls autoplay></video> -->
+                <img style="-webkit-user-select: none;" src="http://localhost:5000/video_feed" width="1240"
+                    height="780">
+                <!-- <video src="../assets/Videostream/HorrusStream.mp4" style="width: 1120px; height: 800px;" controls autoplay></video> -->
             </div>
             <!-- Weather-->
             <div class="weatherBar">
@@ -60,30 +61,31 @@
                 </div>
             </div>
         </div>
+
     </div>
 </template>
 
 <script>
+import axios from 'axios';
 export default {
     data() {
         return {
-            currentDate: '',
-            currentTime: '',
-            valueTemp: '31',
-            windSpeed: '2',
-            windDirec: 'n',
-            humidity: '23',
+            currentDate: 'N/A',
+            currentTime: 'N/A',
+            valueTemp: 'N/A',
+            windSpeed: 'N/A',
+            windDirec: 'N/A',
+            humidity: 'N/A',
 
         }
     },
 
     mounted() {
-        //--time---//
         this.updateDateTime();
         setInterval(this.updateDateTime, 1000);
-
-        //--video---//
-        this.startVideo();
+        // this.startVideo();
+        this.fetchData(); // Fetch initial data
+        setInterval(this.fetchData, 1000); // Fetch periodically
 
     },
 
@@ -94,9 +96,20 @@ export default {
             this.currentDate = now.toLocaleDateString();
             this.currentTime = now.toLocaleTimeString();
             console.log('Updated date and time:', this.currentDate, this.currentTime);
+        },
+        async fetchData() {
+            try {
+                const response = await axios.get('http://localhost:5000/weather_data');
+                this.valueTemp = response.data.valueTemp;
+                this.windSpeed = response.data.windSpeed;
+                this.windDirec = response.data.windDirec;
+                this.humidity = response.data.humidity;
+            } catch (error) {
+                console.error('Error fetching data from sensor', error);
+            }
         }
     }
-}
+};
 
 </script>
 
@@ -105,12 +118,11 @@ export default {
 
     display: flex;
     flex-direction: column;
-    margin-left: 64px;
-    /* width: 1257px;
-    height: 720px; */
+    margin-left: 220px;
 
     .top_content {
         height: 80px;
+        width: 1486px;
         padding: 20px 30px 20px 20px;
         display: flex;
         flex-direction: row;
@@ -126,7 +138,7 @@ export default {
             .time {
                 font-size: 20px;
                 display: flex;
-                gap: 5px;
+                gap: 8px;
                 align-items: center;
             }
 
@@ -139,7 +151,7 @@ export default {
         margin: 20px;
 
         .vidoStream {
-            width: 1240px;
+            width: 1120px;
             height: 780px;
             background-color: var(--light);
         }
@@ -151,7 +163,7 @@ export default {
             .card {
                 display: flex;
                 background-color: var(--light);
-                width: 340px;
+                width: 300px;
                 height: 100px;
                 border-radius: 12px;
                 padding: 20px;
