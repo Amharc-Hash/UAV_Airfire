@@ -21,8 +21,8 @@
                 <div class="detecCard">
                     <h2>RGB Detection</h2>
                     <div class="result">
-                        <img src="../assets/result/rgb_Detection.jpg" style="width: 640px; height: 420px;">
-                        <!-- <img style="-webkit-user-select: none;" src="http://localhost:5000/rgb_feed" width="640" height="420"> -->
+                        <!-- <img src="../assets/result/rgb_Detection.jpg" style="width: 640px; height: 420px;"> -->
+                        <img style="-webkit-user-select: none;" src="http://localhost:5000/rgb_feed" width="760" height="430">
                     </div>
                 </div>
                 <div class="velueTopredic">
@@ -32,18 +32,19 @@
                         </div>
                         <div class="buttonLaLong">
 				            <p>Latitude:</p>
-                            <input class="latitude" ref="latitudeInput" @change="updateMarkerPosition"/>
+                            <input class="latitude" ref="latitudeInput" @change="updateMarkerPosition" style="height: 32px;"/>
 				                <p>Longtitude:</p>
-                            <input class="longtitude" ref="longitudeInput" @change="updateMarkerPosition"/>
+                            <input class="longtitude" ref="longitudeInput" @change="updateMarkerPosition" style="height: 32px;"/>
                             <div class="getLocation">
-                                <button @click="goToLocation">Go Location</button>
+                                <button @click="goToLocation" >Go Location</button>
                             </div>
                         </div>
                     </div>
                     <div class="inputWildTime">
                         <div class="wildbutton">
                             <p>Type of Wild</p>
-                            <select v-model="selectedWildOption" @change="handleChangeWild">
+                            <select v-model="selectedWildOption" @change="handleChangeWild" style="width: 350px;
+				    height: 35px;">
                                 <option v-for="option in wildOptions" :key="option.value" :value="option.value">
                                     {{ option.text }}
                                 </option>
@@ -51,11 +52,18 @@
                         </div>
                         <div class="timebutton">
                             <p>Time to Prediction</p>
-                            <select v-model="selectedTimeOption" @change="handleChangeWild">
+                            <!-- <select v-model="selectedTimeOption" @change="handleChangeWild" style="width: 350px;
+				    height: 35px;">
                                 <option v-for="option in timeOptions" :key="option.value" :value="option.value">
                                     {{ option.text }}
                                 </option>
-                            </select>
+                            </select> -->
+                            <select v-model="selectedTime" @change="sendSelectedValue"  style="width: 350px;height: 35px;">
+                                <option value="1">5 min</option>
+                                <option value="2">10 min</option>
+                                <option value="3">15 min</option>
+                                <option value="4">20 min</option>
+                            </select> 
                         </div>
                         <div class="buttonPredic">
                                 <button @click="goToLocation">Prediction</button>
@@ -72,7 +80,7 @@
                 <div class="showResult">
                     <div class="predicResult">
                         <!-- <img src="../assets/result/Figure_1.png" style="width: 700px; height: 540px;"> -->
-                        <div ref="map" style="height: 420px;"></div>
+                        <div ref="map" style="height: 430px;"></div>
 			        </div>
                     <div class="paraPredic">
                         <div class="fireDenger">
@@ -102,7 +110,7 @@
 			            </div>
                         <div class="forPrediction">
                             <p>Fire Danger Lavel In map</p>
-                            <img src="../assets/result/Figure_1.png" style="width: 380px; height: 260px;">
+                            <img src="http://localhost:5000/fire_analysis_feed" style="width: 380px; height: 260px;">
                         </div>
                     </div>
 
@@ -122,6 +130,7 @@ import L from 'leaflet';
       return {
         currentDate: '',
         currentTime: '',
+        selectedTime: '',
         selectedWildOption: "", // Initially selected option for wild type
         selectedTimeOption: "", // Initially selected option for time
         wildOptions: [
@@ -171,7 +180,24 @@ import L from 'leaflet';
                     this.circleL.setLatLng([latitude, longitude]);
                     this.map.setView([latitude, longitude]);
                 }
-            }
+            },
+
+    
+            sendSelectedValue() { 
+                // Send HTTP request to server.py with selected value 
+                fetch('/update-time', { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ selectedTime: this.selectedTime }) }) 
+                    .then(response => { 
+                        if (response.ok) { 
+                            console.log('Value sent to server successfully'); 
+                        } 
+                        else { 
+                            console.error('Failed to send value to server'); 
+                        } 
+                    }) .catch(error => { console.error('Error:', error); }); 
+                }
     },
     mounted() {
     // Create a map instance
@@ -189,7 +215,7 @@ import L from 'leaflet';
     color: ' #EE1D42',  
     fillColor: ' #EE1D42',
     fillOpacity: 0.5,
-    radius: 2500
+    radius: 500
     }).addTo(this.map);
 
 
@@ -205,11 +231,11 @@ import L from 'leaflet';
   
   display: flex;
   flex-direction: column;
-  margin-left: 220px;
+  margin-left: 240px;
 
   .top_content {
         height: 80px;
-        width: 1486px;
+        width: 1680px;
         padding: 20px 30px 20px 20px;
         display: flex;
         flex-direction: row;
@@ -244,7 +270,7 @@ import L from 'leaflet';
 
           .detecCard{
               background-color: var(--light);
-              width: 680px;
+              width: 800px;
               height: 500px;
               padding: 20px;
               border-radius: 12px;
@@ -260,22 +286,23 @@ import L from 'leaflet';
             display:flex;
             gap: 20px;
 
-            .inputWildTime{
+            .inputWildTime {
 			    flex-direction: column;
 			    background-color: var(--light);
-			    width: 330px;
+			    width: 390px;
 			    height: 300px;
 			    border-radius: 12px;
 			    padding: 20px;
-			    gap:50px;
 			    font-size: 14px;
 
+                .wildbutton{
+                    margin-bottom: 20px;
+                }
+
 			    select {
-				    margin-top: 8px;
-                    margin-bottom: 10px;
+				    margin-top: 10px;
+                    gap: 10px;
 				    background-color: var(--light);
-				    width: 280px;
-				    height: 40px;
 				    border-radius: 6px;
 			    }
                 option {
@@ -284,24 +311,10 @@ import L from 'leaflet';
 
                 }
 
-                .buttonPredic{
-                        display: flex;
-                        width: 100px;
-                        height: 40px;
-                        padding: 12px;
-                        border-radius: 8px;
-                        margin: 20px 0px 0px 190px;
-                        background-color: var(--grey);
-                        justify-content: center;
-                        &:hover {
-				            background-color: var(--primary);
-                            color: var(--light);
-			            }
-                    }
             }  
             
             .inputLaLong{
-                width: 330px;
+                width: 390px;
 			    height: 300px;
                 background-color: var(--light);
 				display: flex;
@@ -318,15 +331,35 @@ import L from 'leaflet';
                     flex-direction: column;
 				    gap:5px;
                     border-radius: 12px;
+
                     input{
-                        height: 30px;
+                        height: 60px;
                     }
+                    
+                }
+			}
+
+            .buttonPredic{
+                        display: flex;
+                        width: 100px;
+                        height: 40px;
+                        padding: 12px;
+                        border-radius: 8px;
+                        margin: 100px 0px 0px 240px;
+                        background-color: var(--grey);
+                        justify-content: center;
+                        &:hover {
+				            background-color: var(--primary);
+                            color: var(--light);
+			            }
+                    }
+
                     .getLocation{
                         width: 100px;
                         height: 40px;
                         padding: 12px;
                         border-radius: 8px;
-                        margin: 20px 0px 0px 190px;
+                        margin: 60px 0px 0px 240px;
                         background-color: var(--grey);
 
                         &:hover {
@@ -334,13 +367,11 @@ import L from 'leaflet';
                             color: var(--light);
 			            }
                     }
-                }
-			}
 
         }
 
         .predicFire {
-			width: 740px;
+			width: 820px;
 			height: 820px;
 			background-color: var(--light);
 			border-radius: 12px;

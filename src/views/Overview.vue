@@ -18,8 +18,8 @@
         <div class="main_content">
             <!-- real-time -->
             <div class="vidoStream">
-                <img style="-webkit-user-select: none;" src="http://localhost:5000/video_feed" width="1240"
-                    height="780">
+                <img style="-webkit-user-select: none;" src="http://localhost:5000/video_feed" width="1300"
+                    height="830">
                 <!-- <video src="../assets/Videostream/HorrusStream.mp4" style="width: 1120px; height: 800px;" controls autoplay></video> -->
             </div>
             <!-- Weather-->
@@ -47,7 +47,7 @@
                     <img src="../assets/windSpeed.png" alt="Card Image" class="card-image">
                     <div class="card-content">
                         <p class="card-title">Wind Speed</p>
-                        <p class="card-value">{{ windSpeed }} k/hr</p>
+                        <p class="card-value">{{ windSpeed }} m/s</p>
                     </div>
                 </div>
 
@@ -72,10 +72,10 @@ export default {
         return {
             currentDate: 'N/A',
             currentTime: 'N/A',
-            valueTemp: 'N/A',
-            windSpeed: 'N/A',
-            windDirec: 'N/A',
-            humidity: 'N/A',
+            valueTemp: '-',
+            windSpeed: '-',
+            windDirec: '-',
+            humidity: '-',
 
         }
     },
@@ -118,11 +118,11 @@ export default {
 
     display: flex;
     flex-direction: column;
-    margin-left: 220px;
+    margin-left: 240px;
 
     .top_content {
         height: 80px;
-        width: 1486px;
+        width: 1680px;
         padding: 20px 30px 20px 20px;
         display: flex;
         flex-direction: row;
@@ -151,8 +151,8 @@ export default {
         margin: 20px;
 
         .vidoStream {
-            width: 1120px;
-            height: 780px;
+            width: 1300px;
+            height: 830px;
             background-color: var(--light);
         }
 
@@ -163,7 +163,7 @@ export default {
             .card {
                 display: flex;
                 background-color: var(--light);
-                width: 300px;
+                width: 320px;
                 height: 100px;
                 border-radius: 12px;
                 padding: 20px;
