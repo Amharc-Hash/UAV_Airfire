@@ -419,6 +419,15 @@ def update_time():
     print('Select time :',selected_time)
     return 'Time update successfully'
 
+@app.route('/perform-prediction', methods=['POST'])
+def perform_prediction():
+    data = request.get_json()
+    selected_wild_option = data['selectedWildOption']
+    selected_time_option = data['selectedTimeOption']
+    print("Selected wildfire type:", selected_wild_option)
+    print("Selected time:", selected_time_option)
+    return jsonify({'success': True}), 200
+
 if __name__ == '__main__':
 
     app.run(debug=True, port=5000)
