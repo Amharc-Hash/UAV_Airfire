@@ -150,7 +150,7 @@ def rgb_detect(image):
             fire_found = True
     return fire_found , image
 
-def detect_thermal(frame):
+def thermal_detect(frame):
     gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     _, binary_image = cv2.threshold(gray_frame, 220, 255, cv2.THRESH_BINARY)
     contours, _ = cv2.findContours(binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
