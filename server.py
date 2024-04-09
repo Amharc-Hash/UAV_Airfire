@@ -150,6 +150,33 @@ def rgb_detect(image):
             fire_found = True
     return fire_found , image
 
+def detect_thermal(frame):
+    gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    _, binary_image = cv2.threshold(gray_frame, 220, 255, cv2.THRESH_BINARY)
+    contours, _ = cv2.findContours(binary_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    bounding_boxes = []
+    for contour in contours:
+        x, y, w, h = cv2.boundingRect(contour)
+        if (w > 50 and h > 50) :
+            bounding_boxes.append((x, y, x + w, y + h))
+    bounding_boxes = filter_inside_boxes(bounding_boxes)
+
+    return bounding_boxes , frame
+
+def filter_inside_boxes(boxes):
+    filtered_boxes = []
+    for i, box1 in enumerate(boxes):
+        inside = False
+        for j, box2 in enumerate(boxes):
+            if i != j:
+                if box1[0] >= box2[0] and box1[1] >= box2[1] and box1[2] <= box2[2] and box1[3] <= box2[3]:
+                    inside = True
+                    break
+        if not inside:
+            filtered_boxes.append(box1)
+
+    return filtered_boxes
+
 @app.route('/rgb_feed')
 def rgb_feed():
     camera_rtsp = cv2.VideoCapture('rtsp://192.168.144.10:8554/H264Video')
@@ -179,7 +206,7 @@ def rgb_feed():
                 # detections ,frame_rgb = model_detect(frame_rtsp)
                 # if len(detections) != 0:
                 #    fire_analysis(True)
-                detections ,frame_rgb = rgb_detect(frame_rtsp)
+                detections ,frame_rgb = rgb_detect(frame_rtsp) #Change Detection type here
                 if detections :
                     fire_analysis(1)
                 ret_rtsp, buffer_rgb = cv2.imencode('.jpg', frame_rgb)
