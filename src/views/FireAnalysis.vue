@@ -137,7 +137,7 @@ export default {
             wildOptions: [
                 { text: "Deciduous forest", value: "deciduous_forest" },
                 { text: "Pine forest", value: "pine_forest" },
-                { text: "Meadow", value: "meadow" },
+                { text: "mixed forest", value: "mixed forest" },
                 { text: "Forest garden", value: "forest_garden" }
             ],
             timeOptions: [
