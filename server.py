@@ -119,20 +119,22 @@ def model_detect(input):
                                     class_colors, 
                                     thresh
                                     )
-    
-
     return detections ,image
 
 def rgb_detect(image):
     hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    l_w = np.array([0,0,200])
-    u_w = np.array([180,50,255])
-    l_r1 = np.array([0,100,100])
-    u_r1 = np.array([10,255,255])
-    l_r2 = np.array([170,100,100])
-    u_r2 = np.array([180,255,255])
-    l_o = np.array([10,100,100])
-    u_o = np.array([30,255,25])
+    # Convert image to HSV color space
+    
+    #HSV color range [H, S, V]
+    l_w = np.array([0,0,200])       #lower bound white color
+    u_w = np.array([180,50,255])    #upper bound white color
+    l_r1 = np.array([0,100,100])    #lower bound red1 color
+    u_r1 = np.array([10,255,255])   #upper bound red1 color
+    l_r2 = np.array([170,100,100])  #lower bound red2 color
+    u_r2 = np.array([180,255,255])  #upper bound red2 color
+    l_o = np.array([10,100,100])    #lower bound orange color
+    u_o = np.array([30,255,25])     #upper bound orange color
+    
     mask_white = cv2.inRange(hsv_image,l_w,u_w)
     mask_red1 = cv2.inRange(hsv_image,l_r1,u_r1)
     mask_red2 = cv2.inRange(hsv_image,l_r2,u_r2)
@@ -222,29 +224,24 @@ def rgb_feed():
 
 #Function to create fire analysis
 class Cell :
-    def __init__(self, forest_type, slope,slope_dir,distance,angle,p_ffmc = 0):
+    def __init__(self, forest_type, slope,slope_dir,p_ffmc = 0):
 
 
-        if forest_type == 0 :
+        if forest_type == "deciduous_forest" : 
             self.fuel_bed_depth =77.317
-        elif forest_type == 1 :
+        elif forest_type == "pine_forest" :
             self.fuel_bed_depth = 108.244
-        elif forest_type == 2 :
+        elif forest_type == "mixed_forest" :
             self.fuel_bed_depth = 54.12244
-        elif forest_type == 3 :
+        elif forest_type == "forest_garden" :
             self.fuel_bed_depth = 38.65889
-        else :
-            self.fuel_bed_depth = 51.0589
         self.slope = slope
         self.slope_dir = slope_dir
         self.p_ffmc = p_ffmc
         self.stack = 0
-        self.distance = distance
-        self.angle = angle
         self.is_ignited = False
 
 
-    
     def wind_blowing(self) :
         if self.wind_dir == self.slope_dir:
             return 0
@@ -254,7 +251,7 @@ class Cell :
             return 2
 
     def update_environment(self, wind_dir, wind_speed, temp, rh) :
-        self.wind_speed = wind_speed * 196.850394
+        self.wind_speed = wind_speed * 196.850394 #convert from m/s to ft/m
         self.wind_dir = wind_dir
         self.temp = temp
         self.rh = rh
@@ -270,23 +267,6 @@ class Cell :
             self.wind_adj = 1
         
         self.fmc = 147.2 / (self.ffmc + 7.5)
-        
-    def state_fire(self, time_ignite, distance_fire,locate,stack) :
-        self.time_ignite = time_ignite
-        self.distance_fire = distance_fire
-        self.locate = locate
-        self.stack += stack
-    
-    def get_wind_speed(self)  :
-        if self.angle == self.wind_dir or self.angle == self.wind_dir - 1 or self.angle == self.wind_dir + 1:
-            return self.wind_speed
-        elif self.angle == (abs(self.wind_dir - 180))%360 :
-            return -self.wind_dir
-        else :
-            if abs(self.wind_dir - self.angle) >= 180 :
-                return  - (self.wind_speed * math.cos(math.radians(abs(self.wind_dir - self.angle - 180))))
-            else:
-                return  - (self.wind_speed * math.cos(math.radians(abs(self.wind_dir - self.angle))))
     
     def get_ros(self, angle):
         ros = 1 / self.fuel_bed_depth * 0.936 * (self.wind_speed/ self.wind_adj) * (1 + 3.33 * (self.ffmc/100) * (self.fmc/100))
@@ -315,8 +295,8 @@ class Cell :
 
 def print_ros(grid,N,time):
     ros,base_ros = grid[N//2,N//2].get_ros_val()
-    base_ros *= 0.3048 * time
-    ros *= 0.3048 * time
+    base_ros *= 3.2808 * time
+    ros *= 3.2808 * time
     return ros , base_ros
 
 def calculate_distance(p1,p2) :
@@ -332,14 +312,12 @@ def angle_from_center(center_x, center_y, x, y):
     
     return int(angle_deg)
 
-
 def initialize_grid(N , forest_type):
     grid = np.empty((N, N), dtype=object)
     for i in range(N):
         for j in range(N):
-            # Initialize each cell with random parameters
-            grid[i, j] = Cell(1, 0, 0, calculate_distance((i,j),(N//2,N//2)), angle_from_center(N//2,N//2,i,j))
-            # Add more initialization for parameters as needed
+            # Initialize each cell with forest type. slope, slope direction
+            grid[i, j] = Cell(forest_type, 0, 0)
     return grid
 
 def get_data_weatherstation(grid,scale, wind_dir, wind_speed, temp, rh) :
@@ -359,7 +337,7 @@ def update(grid, N ,time, scale,fire_found = False):
                 if grid[i,j].is_ignited :
                     for x in range(0,N):
                         for y in range(0,N):
-                            if calculate_distance((i,j),(x,y))*scale <= (grid[i,j].get_ros(angle_from_center(i,j,x,y))) * time :
+                            if calculate_distance((i,j),(x,y)) * scale <= (grid[i,j].get_ros(angle_from_center(i,j,x,y))) * time :
                                 newGrid[x,y].stack += 1
                                 newGrid[x,y].is_ignited = True
                     #newGrid[i,j].is_ignited = False
@@ -386,10 +364,11 @@ def color_map(N,grid1,grid2,grid3,grid4) :
     plt.imshow(data, cmap=cmap, interpolation='nearest')
     plt.savefig('src/assets/result/plot.jpg')
 
-def fire_analysis(forest_type) :
-    N = 101
-    scale = 10
-    data = get_sensor_data()
+def fire_analysis() :
+    forest_type , time = perform_prediction() # get forest type and 
+    N = 101 # grid size
+    scale = 10 # scale for each grid width
+    data = get_sensor_data() # get data from weather station
     print(data)
     if data['windDirec'] == 'N' :
         direc = 0
@@ -410,10 +389,10 @@ def fire_analysis(forest_type) :
     else :
         direc = 0
         data['windSpeed'] = 0
-    time = 20
     grid = initialize_grid(N, forest_type)
     grid = get_data_weatherstation(grid,scale, direc, data['windSpeed'], data['valueTemp'], data['humidity'])
     grid[N//2,N//2].is_ignited = True
+    
     grid1 = update(grid,N,time*0.5,scale,True)
     grid2 = update(grid,N,time,scale,True)
     grid3 = update(grid,N,time*1.5,scale,True)
@@ -453,7 +432,7 @@ def perform_prediction():
     selected_time_option = data['selectedTimeOption']
     print("Selected wildfire type:", selected_wild_option)
     print("Selected time:", selected_time_option)
-    return jsonify({'success': True}), 200
+    return selected_wild_option, selected_time_option
 
 if __name__ == '__main__':
 
