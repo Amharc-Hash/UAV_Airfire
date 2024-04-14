@@ -228,13 +228,13 @@ class Cell :
 
 
         if forest_type == "deciduous_forest" : 
-            self.fuel_bed_depth =77.317
+            self.fuel_bed_depth = 749.79601
         elif forest_type == "pine_forest" :
-            self.fuel_bed_depth = 108.244
+            self.fuel_bed_depth = 1049.71
         elif forest_type == "mixed_forest" :
-            self.fuel_bed_depth = 54.12244
+            self.fuel_bed_depth = 524.85721
         elif forest_type == "forest_garden" :
-            self.fuel_bed_depth = 38.65889
+            self.fuel_bed_depth = 374.89801
         self.slope = slope
         self.slope_dir = slope_dir
         self.p_ffmc = p_ffmc
